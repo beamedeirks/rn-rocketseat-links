@@ -5,7 +5,7 @@ import { colors } from "@/styles/colors";
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //paddingTop: 12,
+    paddingTop: 20,
   },
   title: {
     color: colors.green[900],

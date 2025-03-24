@@ -13,18 +13,23 @@ import { colors } from "@/styles/colors";
 import { Categories } from "@/components/categories";
 import { Link } from "@/components/link";
 import { Option } from "@/components/option";
+import { router } from "expo-router";
+import { useState } from "react";
+import { categories } from "@/utils/categories";
 
 export default function Index() {
+  const [category, setCategory] = useState(categories[0].name);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image source={require("@/assets/logo.png")} style={styles.logo} />
-        <TouchableOpacity activeOpacity={0.6}>
+
+        <TouchableOpacity onPress={() => router.navigate("/add")}>
           <MaterialIcons name="add" size={32} color={colors.green[300]} />
         </TouchableOpacity>
       </View>
 
-      <Categories />
+      <Categories onChange={setCategory} selected={category} />
 
       <FlatList
         data={["1", "2", "3"]}
@@ -41,7 +46,7 @@ export default function Index() {
         showsVerticalScrollIndicator={false}
       />
 
-      <Modal transparent visible={true}>
+      <Modal transparent visible={false}>
         <View style={styles.modal}>
           <View style={styles.modalContent}>
             <View style={styles.modalHeader}>
@@ -59,7 +64,7 @@ export default function Index() {
             <Text style={styles.modalUrl}>https://www.rocketseat.com.br/</Text>
             <View style={styles.modalFooter}>
               <Option name="Excluir" icon="delete" variant="secondary" />
-              <Option name="Abrir" icon="language" variant="primary" />
+              <Option name="Abrir" icon="language" />
             </View>
           </View>
         </View>
