@@ -7,24 +7,44 @@ import { Categories } from "@/components/categories";
 import { Input } from "@/components/input";
 import { Button } from "@/components/button";
 import { useState } from "react";
+import { linkStorage } from "@/storage/link-storage";
 
 export default function Add() {
   const [category, setCategory] = useState("");
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
 
-  function handleAdd() {
-    if (!category) {
-      return Alert.alert("Categoria", "Selecione a categoria");
+  async function handleAdd() {
+    try {
+      if (!category) {
+        return Alert.alert("Categoria", "Selecione a categoria");
+      }
+      //.trim() -- remove os espaços
+      if (!name.trim()) {
+        return Alert.alert("Nome", "Informe o nome");
+      }
+      if (!url.trim()) {
+        return Alert.alert("URL", "Informe a URL");
+      }
+      await linkStorage.save({
+        id: new Date().getTime().toString(),
+        name,
+        url,
+        category,
+      });
+
+      Alert.alert("Sucesso", "Novo link adicionado", [
+        {
+          text: "Ok",
+          onPress: () => router.back(),
+        },
+      ]);
+
+      console.log({ category, name, url });
+    } catch (error) {
+      Alert.alert("Erro", "Não foi possivel salvar o link");
+      console.log(error);
     }
-    //.trim() -- remove os espaços
-    if (!name.trim()) {
-      return Alert.alert("Nome", "Informe o nome");
-    }
-    if (!url.trim()) {
-      return Alert.alert("URL", "Informe a URL");
-    }
-    console.log({ category, name, url });
   }
 
   return (
@@ -41,7 +61,7 @@ export default function Add() {
 
       <View style={styles.form}>
         <Input placeholder="Nome" onChangeText={setName} />
-        <Input placeholder="URL" onChangeText={setUrl} />
+        <Input placeholder="URL" onChangeText={setUrl} autoCapitalize="none" />
         <Button title="Adicionar" onPress={handleAdd} />
       </View>
     </View>
